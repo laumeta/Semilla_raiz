@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Tu Coach Emocional</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f4f8;
+      padding: 2rem;
+      max-width: 600px;
+      margin: auto;
+    }
+    #chat {
+      border: 1px solid #ccc;
+      padding: 1rem;
+      border-radius: 10px;
+      background: #fff;
+      height: 400px;
+      overflow-y: auto;
+      margin-bottom: 1rem;
+    }
+    .msg { margin: 0.5rem 0; }
+    .user { color: #444; font-weight: bold; }
+    .bot { color: #6B47DC; }
+    input[type="text"] {
+      width: 80%;
+      padding: 0.5rem;
+      border-radius: 5px;
+      border: 1px solid #aaa;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      background: #6B47DC;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin-left: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h2>🤖 Tu Coach Emocional</h2>
+  <div id="chat">
+    <div class="msg bot">Hola 🌱 Soy tu guía emocional. ¿Cómo te sientes hoy?</div>
+  </div>
+  <input type="text" id="userInput" placeholder="Escribe aquí...">
+  <button onclick="sendMessage()">Enviar</button>
+
+  <script>
+    async function sendMessage() {
+      const userInput = document.getElementById("userInput").value;
+      if (!userInput) return;
+      const chat = document.getElementById("chat");
+
+      chat.innerHTML += `<div class="msg user">Tú: ${userInput}</div>`;
+      document.getElementById("userInput").value = "";
+
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: userInput })
+      });
+
+      const data = await response.json();
+      const reply = data.reply;
+      chat.innerHTML += `<div class="msg bot">Coach: ${reply}</div>`;
+      chat.scrollTop = chat.scrollHeight;
+    }
+  </script>
+</body>
+</html>
