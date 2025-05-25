@@ -61,8 +61,8 @@
     <div class="msg bot"><strong>Hola 🌱</strong> Soy tu guía emocional. ¿Cómo te sientes hoy?</div>
   </div>
 
-  <input type="text" id="userInput" placeholder="Escribe aquí...">
-  <button onclick="sendMessage()">Enviar</button>
+  <input type="text" id="userInput" placeholder="Escribe aquí..." onkeydown="if(event.key === 'Enter'){ sendMessage(); }">
+<button onclick="sendMessage()">Enviar</button>
   <button onclick="iniciarSendero()">🌿 Caminar en silencio</button>
 
   <script>
