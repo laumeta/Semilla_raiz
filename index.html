@@ -40,6 +40,7 @@
       border: none;
       border-radius: 5px;
       margin-left: 1rem;
+      margin-top: 0.5rem;
     }
 
     /* Animación de puntos */
@@ -59,8 +60,10 @@
   <div id="chat">
     <div class="msg bot"><strong>Hola 🌱</strong> Soy tu guía emocional. ¿Cómo te sientes hoy?</div>
   </div>
+
   <input type="text" id="userInput" placeholder="Escribe aquí...">
   <button onclick="sendMessage()">Enviar</button>
+  <button onclick="iniciarSendero()">🌿 Caminar en silencio</button>
 
   <script>
     async function sendMessage() {
@@ -70,11 +73,9 @@
 
       // Mostrar mensaje del usuario
       chat.innerHTML += `<div class="msg user"><strong>Tú:</strong> ${userInput}</div>`;
-
-      // Limpiar el input
       document.getElementById("userInput").value = "";
 
-      // Mostrar mensaje "Coach está escribiendo..."
+      // Mostrar mensaje de "Coach está escribiendo..."
       const loadingId = "loading-" + Date.now();
       chat.innerHTML += `<div class="msg bot" id="${loadingId}">Coach está escribiendo<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span></div>`;
       chat.scrollTop = chat.scrollHeight;
@@ -88,11 +89,39 @@
       const data = await response.json();
       const reply = data.reply;
 
-      // Reemplazar el mensaje "escribiendo..." por la respuesta real
+      // Reemplazar mensaje "escribiendo..." con la respuesta real
       const loadingElement = document.getElementById(loadingId);
       loadingElement.innerHTML = `<strong>Coach:</strong> ${reply}`;
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function iniciarSendero() {
+      const chat = document.getElementById("chat");
+      document.getElementById("userInput").style.display = "none";
+      const botones = document.querySelectorAll("button");
+      botones.forEach(b => b.style.display = "none");
+
+      chat.innerHTML += `
+        <div class="msg bot"><strong>🌳 Sendero del Silencio</strong>\n\n
+        1. 🌬️ Respira profundamente. Deja que el aire entre como si el bosque te abrazara.\n\n
+        2. 👣 Cierra los ojos y escucha los sonidos imaginarios de la naturaleza a tu alrededor.\n\n
+        3. 🪷 Quédate aquí un momento. Sin escribir, sin hacer. Solo siendo.\n\n
+        4. ✨ Cuando lo sientas, haz clic para regresar.</div>
+        <div class="msg bot"><button onclick="salirDelSendero()">Volver</button></div>
+      `;
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function salirDelSendero() {
+      document.getElementById("userInput").style.display = "inline-block";
+      const botones = document.querySelectorAll("button");
+      botones.forEach(b => b.style.display = "inline-block");
+
+      const chat = document.getElementById("chat");
+      chat.innerHTML += `<div class="msg bot">🍃 Has regresado al claro. ¿Cómo te sientes ahora?</div>`;
       chat.scrollTop = chat.scrollHeight;
     }
   </script>
 </body>
 </html>
+
