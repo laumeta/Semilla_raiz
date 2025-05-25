@@ -8,41 +8,56 @@
       font-family: 'Segoe UI', sans-serif;
       background: #f4f4f8;
       padding: 2rem;
-      max-width: 600px;
+      max-width: 700px;
       margin: auto;
+    }
+    h2 {
+      text-align: center;
     }
     #chat {
       border: 1px solid #ccc;
       padding: 1rem;
       border-radius: 10px;
       background: #fff;
-      height: 400px;
+      height: 450px;
       overflow-y: auto;
       margin-bottom: 1rem;
+      white-space: pre-wrap;
     }
-    .msg { margin: 0.5rem 0; }
+    .msg { margin: 0.8rem 0; }
     .user { color: #444; font-weight: bold; }
     .bot { color: #6B47DC; }
     input[type="text"] {
-      width: 80%;
-      padding: 0.5rem;
+      width: 75%;
+      padding: 0.6rem;
       border-radius: 5px;
       border: 1px solid #aaa;
     }
     button {
-      padding: 0.5rem 1rem;
+      padding: 0.6rem 1rem;
       background: #6B47DC;
       color: white;
       border: none;
       border-radius: 5px;
       margin-left: 1rem;
     }
+
+    /* Animación de puntos */
+    .dot {
+      animation: blink 1.4s infinite;
+      font-weight: bold;
+    }
+    @keyframes blink {
+      0% { opacity: 0; }
+      50% { opacity: 1; }
+      100% { opacity: 0; }
+    }
   </style>
 </head>
 <body>
   <h2>🤖 Tu Coach Emocional</h2>
   <div id="chat">
-    <div class="msg bot">Hola 🌱 Soy tu guía emocional. ¿Cómo te sientes hoy?</div>
+    <div class="msg bot"><strong>Hola 🌱</strong> Soy tu guía emocional. ¿Cómo te sientes hoy?</div>
   </div>
   <input type="text" id="userInput" placeholder="Escribe aquí...">
   <button onclick="sendMessage()">Enviar</button>
@@ -53,8 +68,16 @@
       if (!userInput) return;
       const chat = document.getElementById("chat");
 
-      chat.innerHTML += `<div class="msg user">Tú: ${userInput}</div>`;
+      // Mostrar mensaje del usuario
+      chat.innerHTML += `<div class="msg user"><strong>Tú:</strong> ${userInput}</div>`;
+
+      // Limpiar el input
       document.getElementById("userInput").value = "";
+
+      // Mostrar mensaje "Coach está escribiendo..."
+      const loadingId = "loading-" + Date.now();
+      chat.innerHTML += `<div class="msg bot" id="${loadingId}">Coach está escribiendo<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span></div>`;
+      chat.scrollTop = chat.scrollHeight;
 
       const response = await fetch("/api/chat", {
         method: "POST",
@@ -64,7 +87,10 @@
 
       const data = await response.json();
       const reply = data.reply;
-      chat.innerHTML += `<div class="msg bot">Coach: ${reply}</div>`;
+
+      // Reemplazar el mensaje "escribiendo..." por la respuesta real
+      const loadingElement = document.getElementById(loadingId);
+      loadingElement.innerHTML = `<strong>Coach:</strong> ${reply}`;
       chat.scrollTop = chat.scrollHeight;
     }
   </script>
